@@ -1,4 +1,5 @@
-import sys, json, codecs, pickle
+#!/usr/bin/env python
+import sys, json, codecs, pickle, argparse
 import numpy as np
 
 from sklearn.externals import joblib
@@ -7,10 +8,18 @@ from hmmlearn import hmm
 
 np.random.seed(seed=None)
 
-num_states = int(sys.argv[1])
-input_path = sys.argv[2]
+args = argparse.ArgumentParser(
+        description="Train discrete HMM based on given input text")
+args.add_argument("-n", "--num-states", type=int, required=True,
+        help="number of hidden states")
+args.add_argument("--init", choices=["builtin", "freq", "flat"], default="builtin",
+        help="strategy for estimating initial model parameters")
+args.add_argument("input", nargs="?", type=argparse.FileType("r"),
+        default=sys.stdin,
+        help="input text that will act as training set for the model")
+args = args.parse_args()
 
-lines = [line.split() for line in codecs.open(input_path, "r", encoding="utf8")]
+lines = [line.split() for line in args.input]
 words = [word.lower() for line in lines for word in line]
 
 alphabet = set(words)
