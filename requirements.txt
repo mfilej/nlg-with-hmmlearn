@@ -1,4 +1,6 @@
 pytest
+numpy
+scipy
 scikit-learn
 nltk
 hmmlearn
