@@ -36,6 +36,10 @@ seq = le.transform(words)
 features = np.fromiter(seq, np.int64)
 features = np.atleast_2d(features).T
 
+def outfile(ext):
+    return "{name}.{init}.{n}.{ext}".format(
+            name=args.o, init=args.init, n=args.num_states, ext=ext)
+
 def builtin():
     warn("Initial parameter estimation using built-in method")
     model = hmm.MultinomialHMM(n_components=args.num_states, init_params='ste')
@@ -44,6 +48,10 @@ def builtin():
 def frequencies():
     warn("Initial parameter estimation using relative frequencies")
     fd = FreqDist(seq)
+
+    with open(outfile("freqdist"), "wb") as f:
+        pickle.dump(fd, f)
+
     frequencies = np.fromiter((fd.freq(i) for i in range(len(alphabet))), dtype=np.float64)
     emission_prob = np.stack([frequencies] * args.num_states)
     print(repr(emission_prob.shape))
@@ -66,10 +74,6 @@ model = dispatch_init_est(args.init)()
 
 lengths = [len(line) for line in lines]
 model = model.fit(features, lengths)
-
-def outfile(ext):
-    return "{name}.{init}.{n}.{ext}".format(
-            name=args.o, init=args.init, n=args.num_states, ext=ext)
 
 joblib.dump(model, outfile("pkl"))
 with open(outfile("le"), "wb") as f:
