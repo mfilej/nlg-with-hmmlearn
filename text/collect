@@ -1,0 +1,3 @@
+#!/usr/bin/env ruby -n
+
+puts $_ if $_ =~ /^[[:upper:]][[:alpha:][:space:],.?!]+[.?!]$/

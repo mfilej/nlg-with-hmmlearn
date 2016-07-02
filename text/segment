@@ -1,0 +1,9 @@
+#!/usr/bin/env ruby -n
+
+Signal.trap("PIPE", "EXIT")
+
+$_.gsub(/[.?!]/, "").split(",").each do |segment|
+  segment.strip!
+  next if segment.empty?
+  puts segment.squeeze(" ").downcase
+end

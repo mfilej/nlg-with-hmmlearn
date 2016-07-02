@@ -1,0 +1,8 @@
+#!/usr/bin/env python
+
+import fileinput, string
+from nltk import sent_tokenize
+
+for line in fileinput.FileInput(openhook=fileinput.hook_encoded("utf-8")):
+    for sentence in sent_tokenize(line):
+        print(sentence)

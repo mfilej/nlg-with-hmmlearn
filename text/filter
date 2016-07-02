@@ -1,0 +1,6 @@
+#!/usr/bin/env ruby -n
+
+line = $_.gsub(/[[:space:]]/, "")
+next if line.empty? || line == "."
+next if $_ =~ /^[[:upper:]].*[[:upper:]]/
+puts $_ 
