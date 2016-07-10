@@ -35,6 +35,7 @@ le.fit(list(alphabet))
 seq = le.transform(words)
 features = np.fromiter(seq, np.int64)
 features = np.atleast_2d(features).T
+fd = FreqDist(seq)
 
 def outfile(ext):
     return "{name}.{init}.{n}.{ext}".format(
@@ -47,10 +48,6 @@ def builtin():
 
 def frequencies():
     warn("Initial parameter estimation using relative frequencies")
-    fd = FreqDist(seq)
-
-    with open(outfile("freqdist"), "wb") as f:
-        pickle.dump(fd, f)
 
     frequencies = np.fromiter((fd.freq(i) for i in range(len(alphabet))), dtype=np.float64)
     emission_prob = np.stack([frequencies] * args.num_states)
@@ -78,5 +75,9 @@ model = model.fit(features, lengths)
 joblib.dump(model, outfile("pkl"))
 with open(outfile("le"), "wb") as f:
     pickle.dump(le, f)
+with open(outfile("freqdist"), "wb") as f:
+    pickle.dump(fd, f)
 
-warn("Output written to:\n\t- {0}\n\t- {1}".format(outfile("pkl"), outfile("le")))
+warn("Output written to:\n\t- {0}\n\t- {1}\n\t- {2}".format(
+        outfile("pkl"), outfile("le"), outfile("freqdist")
+    ))
