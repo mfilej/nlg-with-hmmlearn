@@ -51,7 +51,6 @@ def frequencies():
 
     frequencies = np.fromiter((fd.freq(i) for i in range(len(alphabet))), dtype=np.float64)
     emission_prob = np.stack([frequencies] * args.num_states)
-    print(repr(emission_prob.shape))
 
     model = hmm.MultinomialHMM(n_components=args.num_states, init_params='st')
     model.emissionprob_ = emission_prob

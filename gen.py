@@ -40,8 +40,10 @@ model = joblib.load("{0}.pkl".format(args.filename))
 
 seed = args.seed
 for _i in range(args.num_lines):
-    symbols, _states = model.sample(num_words(seed=seed), random_state=seed)
+    random_len = num_words(seed=seed)
     seed = seed + 1
+
+    symbols, _states = model.sample(random_len, random_state=seed)
 
     output = le.inverse_transform(np.squeeze(symbols))
     for word in output:
